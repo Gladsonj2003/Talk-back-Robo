@@ -5,6 +5,8 @@ from yt_audio import *
 from news import *
 import randfacts
 from jokes import *
+import datetime
+from weather import *
 
 engine = p.init()
 rate = engine.getProperty('rate')
@@ -15,10 +17,24 @@ engine.setProperty('voices', voices[0].id)
 def speak(text):
     engine.say(text)
     engine.runAndWait()
+    
+def wishme():
+    hour=int(datetime.datetime.now().hour)
+    if hour>0 and hour<12:
+        return("Good Morning.")
+    elif hour>=12 and hour<16:
+        return("Good afternoon.")
+    else:
+        return("Good evening.")
+    
+today_date=datetime.datetime.now()
 
 r = sr.Recognizer()
 
-speak("hello sir. I'm your voice assistance. How are you?")
+speak("hello sir. " + wishme() + " I'm your voice assistance.") 
+speak("Today is "+today_date.strftime("%d")+" of "+today_date.strftime('%B')+ " And its currently " +(today_date.strftime("%I")) + (today_date.strftime("%M")) + (today_date.strftime("%p")))
+speak("Temperature in Tirunelveli is"+str(temp()) +" degree celcius " + " and with "+str(des()))
+speak("what can I do for you?")
 
 with sr.Microphone() as source:
     r.energy_threshold = 10000
@@ -38,7 +54,7 @@ with sr.Microphone() as source:
     print("listening")
     audio = r.listen(source)
     text2 = r.recognize_google(audio)
-
+    
 if "information" in text2:
     speak("you need information related to which topic?")
 
